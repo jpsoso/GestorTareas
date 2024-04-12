@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +12,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Gestor de tareas',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Gestor de tareas'),
     );
   }
 }
@@ -56,6 +58,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool _NUEVA_TAREA_hecha = false; // Variable del check box de añadir tarea
 
   void _incrementCounter() {
     setState(() {
@@ -116,10 +119,134 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: Icon(CupertinoIcons.add),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  scrollable: true,
+                  title: Text('Añadir tarea'),
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Form(
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Nombre de la tarea',
+                              icon: Icon(CupertinoIcons.pencil),
+                            ),
+                          ),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: 'Descripción',
+                              icon: Icon(CupertinoIcons.doc_plaintext),
+                            ),
+                          ),
+                          /*Row(
+                            children: [
+                              Text("Estado:"),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text("Hecha"),
+                                      Checkbox(value: false, onChanged: null)
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text("Por hacer"),
+                                      Checkbox(value: false, onChanged: null)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),*/
+                          Container(
+                            padding: EdgeInsets.all(20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text("Estado:"),
+                                Checkbox(
+                                    value: this._NUEVA_TAREA_hecha,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        this._NUEVA_TAREA_hecha = value!;
+                                      });
+                                    }
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    ElevatedButton(
+                        child: Text("Añadir"),
+                        onPressed: () {
+                          // your code
+                        })
+                  ],
+                );
+              });
+        },
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+/*
+RaisedButton(
+          child: Text("Open Popup"),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: true,
+                    title: Text('Login'),
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Form(
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                icon: Icon(Icons.account_box),
+                              ),
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                icon: Icon(Icons.email),
+                              ),
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Message',
+                                icon: Icon(Icons.message ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                     actions: [
+                      ElevatedButton(
+                          child: Text("Submit"),
+                          onPressed: () {
+                            // your code
+                          })
+                    ],
+                  );
+                });
+          },
+        ),
+* */
