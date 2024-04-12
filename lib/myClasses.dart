@@ -67,4 +67,9 @@ class GestorTareas {
     }
     return toReturn;
   }
+
+  int tamano()
+  {
+    return tareas.length;
+  }
 }

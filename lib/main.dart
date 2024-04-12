@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gestortareas/myClasses.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Gestor de tareas'),
@@ -59,6 +60,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   bool _NUEVA_TAREA_hecha = false; // Variable del check box de añadir tarea
+  final List<String> items = List<String>.generate(3, (i) => 'Item $i');
+
+  // Controladores de los formularios
+
+  // Gestión de las tareas
+  GestorTareas gestorTareas = GestorTareas();
+
+  void anadeTarea(String name, String desc)
+  {
+    setState(() {
+      Tarea tarea = Tarea(name, desc, false);
+      gestorTareas.anade(tarea);
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -89,113 +104,112 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemCount: gestorTareas.tamano(),
+              itemBuilder: (context, index) {
+                ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        height: 50,
+                        child: Center(child: Text('Entry ${entries[index]}')),
+                      );
+                    }
+                );
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+            width: double.infinity,
+            child: Text("Cajita"),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.grey ,
+                      blurRadius: 2.0,
+                      offset: Offset(2.0,2.0)
+                  )
+                ]
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(CupertinoIcons.add),
         onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: Text('Añadir tarea'),
-                  content: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Form(
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: 'Nombre de la tarea',
-                              icon: Icon(CupertinoIcons.pencil),
+          //setState(() { /*code*/
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: true,
+                    title: Text('Añadir tarea'),
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Form(
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Nombre de la tarea',
+                                icon: Icon(CupertinoIcons.pencil),
+                              ),
                             ),
-                          ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: 'Descripción',
-                              icon: Icon(CupertinoIcons.doc_plaintext),
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Descripción',
+                                icon: Icon(CupertinoIcons.doc_plaintext),
+                              ),
                             ),
-                          ),
-                          /*Row(
-                            children: [
-                              Text("Estado:"),
-                              Row(
+                            Container(
+                              padding: EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Column(
-                                    children: [
-                                      Text("Hecha"),
-                                      Checkbox(value: false, onChanged: null)
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text("Por hacer"),
-                                      Checkbox(value: false, onChanged: null)
-                                    ],
+                                  Text("Estado:"),
+                                  Checkbox(
+                                      value: this._NUEVA_TAREA_hecha,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          this._NUEVA_TAREA_hecha = value!;
+                                        });
+                                      }
                                   )
                                 ],
                               ),
-                            ],
-                          ),*/
-                          Container(
-                            padding: EdgeInsets.all(20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text("Estado:"),
-                                Checkbox(
-                                    value: this._NUEVA_TAREA_hecha,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        this._NUEVA_TAREA_hecha = value!;
-                                      });
-                                    }
-                                )
-                              ],
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                        child: Text("Añadir"),
-                        onPressed: () {
-                          // your code
-                        })
-                  ],
-                );
-              });
+                    actions: [
+                      ElevatedButton(
+                          child: Text("Añadir"),
+                          onPressed: () {
+                            setState(() {
+                              this.items.add('12');
+                            });
+                          })
+                    ],
+                  );
+                });
+          //});
+
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
