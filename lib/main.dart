@@ -175,7 +175,6 @@ class _MyHomePageState extends State<MyHomePage> {
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
           ),
-        Text(this.totalTareas().toString())
         ],
       ),
       floatingActionButton: FloatingActionButton(
