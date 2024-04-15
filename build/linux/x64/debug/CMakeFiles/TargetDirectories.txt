@@ -1,0 +1,14 @@
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/gestortareas.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/edit_cache.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/rebuild_cache.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/list_install_components.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/install.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/install/local.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/CMakeFiles/install/strip.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/flutter_assemble.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/edit_cache.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/rebuild_cache.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/list_install_components.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/install.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/install/local.dir
+/home/jesusp/StudioProjects/GestorTareas/build/linux/x64/debug/flutter/CMakeFiles/install/strip.dir

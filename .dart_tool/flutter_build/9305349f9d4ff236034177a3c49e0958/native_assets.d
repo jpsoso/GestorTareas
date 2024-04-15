@@ -1,0 +1,1 @@
+ /home/jesusp/StudioProjects/GestorTareas/.dart_tool/flutter_build/9305349f9d4ff236034177a3c49e0958/native_assets.yaml: 
