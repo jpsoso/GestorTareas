@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gestortareas/myClasses.dart';
+import 'package:gestortareas/GestorTareas.dart';
+import 'package:gestortareas/Tarea.dart';
 
 void main() {
   runApp(const MyApp());
@@ -68,10 +69,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void anadeTarea(String name, String desc)
   {
-    setState(() {
       Tarea tarea = Tarea(name, desc, false);
       _gestorTareas.anade(tarea);
-    });
+  }
+
+  void completaTarea(int index)
+  {
+    this._gestorTareas.completar(index);
+  }
+
+  void desCompletaTarea(int index)
+  {
+    this._gestorTareas.desCompletar(index);
+  }
+
+  Tarea getAt(int index)
+  {
+    return this._gestorTareas.getAt(index);
+  }
+
+  int totalTareas()
+  {
+    return this._gestorTareas.tamano();
+  }
+
+  void borra(int index)
+  {
+    this._gestorTareas.elimina(this.getAt(index));
   }
 
   @override
@@ -97,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(8),
-              itemCount: this._gestorTareas.tamano(),
+              itemCount: this.totalTareas(),
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   padding: const EdgeInsets.all(8.0),
@@ -109,25 +133,27 @@ class _MyHomePageState extends State<MyHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              this._gestorTareas.getAt(index).getNombre(),
+                              this.getAt(index).getNombre(),
                             style: const TextStyle(
                               fontSize: 20,
                               color: Colors.purple,
                             ),
                           ),
-                          Text(this._gestorTareas.getAt(index).getDesc()),
+                          Text(this.getAt(index).getDesc()),
                         ],
                       ),
                       Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Checkbox(
-                            value: this._gestorTareas.getAt(index).getDone(),
+                            value: this.getAt(index).getDone(),
                             onChanged: (bool? value) {
                               setState(() {
-                                if (!this._gestorTareas.getAt(index).getDone())
+                                if (!this.getAt(index).getDone())
                                 {
-                                  this._gestorTareas.completar(index);
+                                  this.completaTarea(index);
+                                } else {
+                                  this.desCompletaTarea(index);
                                 }
                               });
                             },
@@ -136,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Icon(CupertinoIcons.trash),
                             onPressed: () {
                                 setState((){
-                                  this._gestorTareas.elimina(this._gestorTareas.getAt(index));
+                                  this.borra(index);
                                 });
                               },
                           ),
@@ -144,13 +170,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                     ],
                   )
-
                 );
               },
               separatorBuilder: (BuildContext context, int index) => const Divider(),
             )
           ),
-        Text(this._gestorTareas.tamano().toString())
+        Text(this.totalTareas().toString())
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -190,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Text("Añadir"),
                           onPressed: () {
                             setState(() {
-                              if (nombreController.text != '' && descripcionController.text != '')
+                              if (nombreController.text != '')
                                 {
                                   this.anadeTarea(nombreController.text, descripcionController.text);
                                   nombreController.text = '';
@@ -203,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       builder: (BuildContext context) {
                                         return const AlertDialog(
                                           scrollable: true,
-                                          title: Text('Introduce un nombre y descripción válidos'),
+                                          title: Text('Introduce un nombre para la tarea'),
                                         );
                                       });
                                 }
@@ -219,52 +244,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-/*
-RaisedButton(
-          child: Text("Open Popup"),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    scrollable: true,
-                    title: Text('Login'),
-                    content: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Form(
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Name',
-                                icon: Icon(Icons.account_box),
-                              ),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                icon: Icon(Icons.email),
-                              ),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Message',
-                                icon: Icon(Icons.message ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                     actions: [
-                      ElevatedButton(
-                          child: Text("Submit"),
-                          onPressed: () {
-                            // your code
-                          })
-                    ],
-                  );
-                });
-          },
-        ),
-* */
