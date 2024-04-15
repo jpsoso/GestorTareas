@@ -58,31 +58,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  bool _NUEVA_TAREA_hecha = false; // Variable del check box de añadir tarea
-  final List<String> items = List<String>.generate(3, (i) => 'Item $i');
 
   // Controladores de los formularios
+  TextEditingController nombreController = TextEditingController();
+  TextEditingController descripcionController = TextEditingController();
 
   // Gestión de las tareas
-  GestorTareas gestorTareas = GestorTareas();
+  GestorTareas _gestorTareas = GestorTareas();
 
   void anadeTarea(String name, String desc)
   {
     setState(() {
       Tarea tarea = Tarea(name, desc, false);
-      gestorTareas.anade(tarea);
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _gestorTareas.anade(tarea);
     });
   }
 
@@ -107,51 +95,67 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemCount: gestorTareas.tamano(),
-              itemBuilder: (context, index) {
-                ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: items.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 50,
-                        child: Center(child: Text('Entry ${entries[index]}')),
-                      );
-                    }
+            child: ListView.separated(
+              padding: const EdgeInsets.all(8),
+              itemCount: this._gestorTareas.tamano(),
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  padding: const EdgeInsets.all(8.0),
+                  color: Colors.greenAccent,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              this._gestorTareas.getAt(index).getNombre(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.purple,
+                            ),
+                          ),
+                          Text(this._gestorTareas.getAt(index).getDesc()),
+                        ],
+                      ),
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Checkbox(
+                            value: this._gestorTareas.getAt(index).getDone(),
+                            onChanged: (bool? value) {
+                              setState(() {
+                                if (!this._gestorTareas.getAt(index).getDone())
+                                {
+                                  this._gestorTareas.completar(index);
+                                }
+                              });
+                            },
+                          ),
+                          ElevatedButton(
+                            child: Icon(CupertinoIcons.trash),
+                            onPressed: () {
+                                setState((){
+                                  this._gestorTareas.elimina(this._gestorTareas.getAt(index));
+                                });
+                              },
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+
                 );
               },
-            ),
+              separatorBuilder: (BuildContext context, int index) => const Divider(),
+            )
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-            width: double.infinity,
-            child: Text("Cajita"),
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inversePrimary,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey ,
-                      blurRadius: 2.0,
-                      offset: Offset(2.0,2.0)
-                  )
-                ]
-            ),
-          ),
+        Text(this._gestorTareas.tamano().toString())
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(CupertinoIcons.add),
         onPressed: () {
-          //setState(() { /*code*/
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -164,35 +168,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
+                              controller: nombreController,
                               decoration: const InputDecoration(
                                 labelText: 'Nombre de la tarea',
                                 icon: Icon(CupertinoIcons.pencil),
                               ),
                             ),
                             TextFormField(
+                              controller: descripcionController,
                               decoration: const InputDecoration(
                                 labelText: 'Descripción',
                                 icon: Icon(CupertinoIcons.doc_plaintext),
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.all(20.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Estado:"),
-                                  Checkbox(
-                                      value: this._NUEVA_TAREA_hecha,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          this._NUEVA_TAREA_hecha = value!;
-                                        });
-                                      }
-                                  )
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -202,7 +190,23 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Text("Añadir"),
                           onPressed: () {
                             setState(() {
-                              this.items.add('12');
+                              if (nombreController.text != '' && descripcionController.text != '')
+                                {
+                                  this.anadeTarea(nombreController.text, descripcionController.text);
+                                  nombreController.text = '';
+                                  descripcionController.text = '';
+                                }
+                              else
+                                {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const AlertDialog(
+                                          scrollable: true,
+                                          title: Text('Introduce un nombre y descripción válidos'),
+                                        );
+                                      });
+                                }
                             });
                           })
                     ],

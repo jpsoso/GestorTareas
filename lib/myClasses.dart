@@ -39,7 +39,10 @@ class GestorTareas {
 
   void anade(Tarea tarea)
   {
-    tareas.add(tarea);
+    if (tarea.getNombre() != '' && tarea.getDesc() != '')
+      {
+        tareas.add(tarea);
+      }
   }
 
   void elimina(Tarea tarea)
@@ -47,7 +50,7 @@ class GestorTareas {
     tareas.remove(tarea);
   }
 
-  void completa(int index)
+  void completar(int index)
   {
     if (index < tareas.length && index > 0)
     {
