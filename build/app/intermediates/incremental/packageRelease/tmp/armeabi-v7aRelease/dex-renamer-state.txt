@@ -1,4 +1,4 @@
-#Mon Apr 15 23:40:39 CEST 2024
+#Thu Apr 18 22:04:10 CEST 2024
 base.0=/home/jesusp/StudioProjects/GestorTareas/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
