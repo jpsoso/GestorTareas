@@ -125,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   padding: const EdgeInsets.all(8.0),
-                  color: Colors.greenAccent,
+                  color: this.getAt(index).getDone() ? Colors.green : Colors.greenAccent,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -236,8 +236,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   );
                 });
-          //});
-
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
